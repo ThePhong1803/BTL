@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * <h2><center>&copy; Copyright (c) 2022 STMicroelectronics.
+ * All rights reserved.</center></h2>
+ *
+ * This software component is licensed by ST under BSD 3-Clause license,
+ * the "License"; You may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at:
+ *                        opensource.org/licenses/BSD-3-Clause
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -64,6 +64,18 @@ static void MX_TIM3_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+//UART !7SEG:XX#
+
+void testIO() {
+	for (int i = 0; i < 4; i++) {
+//		if (isButtonPressed(i)) {
+//			HAL_GPIO_TogglePin(L2_EN1_GPIO_Port, L2_EN1_Pin);
+//		}
+		if(isButtonPressed1s(i)){
+			HAL_GPIO_TogglePin(L2_EN0_GPIO_Port, L2_EN0_Pin);
+		}
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -98,20 +110,21 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim2);
+	HAL_TIM_Base_Start_IT(&htim2);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  fsm1_automatic_run();
-	  fsm2_automatic_run();
-	  fsm_modify_timer_control();
+	while (1) {
+//		fsm1_automatic_run();
+//		fsm2_automatic_run();
+//		fsm_modify_timer_control();
+		testIO();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+	}
   /* USER CODE END 3 */
 }
 
@@ -304,41 +317,41 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(L0_EN0_GPIO_Port, L0_EN0_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, L2_EN0_Pin|L0_EN1_Pin|L1_EN1_Pin|L1_EN0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, L0_EN1_Pin|L1_EN1_Pin|L1_EN0_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, L2_EN1_Pin|L0_EN0_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : ButtonL0_1_Pin ButtonL1_0_Pin ButtonL1_1_Pin */
-  GPIO_InitStruct.Pin = ButtonL0_1_Pin|ButtonL1_0_Pin|ButtonL1_1_Pin;
+  /*Configure GPIO pins : Button0_Pin Button1_Pin Button2_Pin */
+  GPIO_InitStruct.Pin = Button0_Pin|Button1_Pin|Button2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : ButtonL0_1B0_Pin */
-  GPIO_InitStruct.Pin = ButtonL0_1B0_Pin;
+  /*Configure GPIO pin : Button3_Pin */
+  GPIO_InitStruct.Pin = Button3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(ButtonL0_1B0_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(Button3_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : L0_EN0_Pin */
-  GPIO_InitStruct.Pin = L0_EN0_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(L0_EN0_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : L0_EN1_Pin L1_EN1_Pin L1_EN0_Pin */
-  GPIO_InitStruct.Pin = L0_EN1_Pin|L1_EN1_Pin|L1_EN0_Pin;
+  /*Configure GPIO pins : L2_EN0_Pin L0_EN1_Pin L1_EN1_Pin L1_EN0_Pin */
+  GPIO_InitStruct.Pin = L2_EN0_Pin|L0_EN1_Pin|L1_EN1_Pin|L1_EN0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : L2_EN1_Pin L0_EN0_Pin */
+  GPIO_InitStruct.Pin = L2_EN1_Pin|L0_EN0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	timerRun();
 	button_reading();
 }
@@ -351,11 +364,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1) {
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 

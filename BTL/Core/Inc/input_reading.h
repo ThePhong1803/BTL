@@ -11,10 +11,10 @@
 #include "main.h"
 
 // we aim to work with more than one buttons
-#define NO_OF_BUTTONS 3
+#define NO_OF_BUTTONS 4
 // timer interrupt duration is 10ms , so to pass 1 second ,
 // we need to jump to the interrupt service routine 100 time
-#define DURATION_FOR_AUTO_INCREASING 	100
+#define DURATION_FOR_AUTO_INCREASING 	50
 
 //define button state
 #define BUTTON_IS_PRESSED 				GPIO_PIN_RESET
