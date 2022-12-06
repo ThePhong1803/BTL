@@ -95,3 +95,54 @@ void clearAllLed(){
 	HAL_GPIO_WritePin(LED1_EN1_GPIO_Port, LED1_EN1_Pin, SET);
 	HAL_GPIO_WritePin(LED1_EN0_GPIO_Port, LED1_EN0_Pin, SET);
 }
+
+void toggleRed1(){
+	if(state == 1){
+		setRedLed1();
+		state = 0;
+		return;
+	}
+	state = 1;
+}
+void toggleYellow1(){
+	if(state == 1){
+		setYellowLed1();
+		state = 0;
+		return;
+	}
+	state = 1;
+}
+void toggleGreen1(){
+	if(state == 1){
+		setGreenLed1();
+		state = 0;
+		return;
+	}
+	state = 1;
+}
+
+void toggleRed2(){
+	if(state == 1){
+		setRedLed2();
+		state = 0;
+		return;
+	}
+	state = 1;
+}
+void toggleYellow2(){
+	if(state == 1){
+		setYellowLed2();
+		state = 0;
+		return;
+	}
+	state = 1;
+}
+void toggleGreen2(){
+	if(state == 1){
+		setGreenLed2();
+		state = 0;
+		return;
+	}
+	state = 1;
+}
+

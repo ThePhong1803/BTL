@@ -32,3 +32,12 @@ int timeCountdown2 = 0;
 
 int returnFlag1 = 0;
 int returnFlag2 = 0;
+
+int state = 0;
+int pedestrian = NOT_ALLOW;
+
+void writeMess(int time){
+	char str[32];
+	sprintf((char*) str, "!7SEG:%02d#\r\n", time);
+	HAL_UART_Transmit(&huart2, (uint8_t *)str, strlen(str), 10);
+}

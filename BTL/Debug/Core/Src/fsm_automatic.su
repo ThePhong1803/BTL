@@ -1,2 +1,2 @@
 ../Core/Src/fsm_automatic.c:11:6:fsm1_automatic_run	8	static
-../Core/Src/fsm_automatic.c:145:6:fsm2_automatic_run	8	static
+../Core/Src/fsm_automatic.c:146:6:fsm2_automatic_run	8	static

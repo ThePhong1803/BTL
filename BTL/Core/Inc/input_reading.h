@@ -26,8 +26,9 @@
 
 //define button function name
 #define CONTROL_MODE 					0
-#define SET_TIME     					1
-#define RETURN       					2
+#define INC_TIME     					1
+#define DEC_TIME						2
+#define RETURN       					3
 
 void initButton();
 void button_reading(void);
